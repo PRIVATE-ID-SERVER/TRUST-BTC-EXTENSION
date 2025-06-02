@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trust Wallet Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Trust Wallet-style theme, inspired by trustwallet.com -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --trust-blue: #3375bb;
+      --trust-light-blue: #4f8cfb;
+      --trust-bg: #0a1627;
+      --trust-card: #12244b;
+      --trust-border: #214487;
+      --trust-text: #fff;
+      --trust-gray: #b7cadb;
+      --trust-btn-hover: #4f8cfb;
+      --trust-btn-active: #295caa;
+      --trust-btn-green: #38c976;
+      --trust-btn-red: #e74c3c;
+    }
+    body {
+      background: var(--trust-bg);
+      min-height: 100vh;
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      color: var(--trust-text);
+    }
+    .wallet-container {
+      width: 500px;
+      margin: 48px auto 32px auto;
+      background: var(--trust-card);
+      border-radius: 24px;
+      box-shadow: 0 6px 38px 0 rgba(79,140,251,0.07);
+      padding: 0 0 28px 0;
+      position: relative;
+      overflow: hidden;
+      border: 1.5px solid var(--trust-border);
+    }
+    .wallet-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 38px 0 18px 0;
+      background: linear-gradient(180deg, var(--trust-light-blue) 0%, #62a5fc 70%, var(--trust-card) 100%);
+      border-bottom: 1.5px solid var(--trust-border);
+      position: relative;
+    }
+    .wallet-header .trust-logo {
+      width: 62px;
+      height: 62px;
+      border-radius: 16px;
+      margin-bottom: 12px;
+      background: #fff;
+      object-fit: contain;
+      box-shadow: 0 2px 10px #4f8cfb25;
+      border: 2.5px solid #fff;
+      display: block;
+    }
+    .wallet-header .wallet-title {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--trust-blue);
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 8px #4f8cfb33;
+    }
+    .wallet-header .wallet-subtitle {
+      color: #08407e;
+      font-size: 1.13em;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      margin-bottom: 15px;
+    }
+    .wallet-balance-wrap {
+      position: relative;
+      text-align: center;
+      width: 90%;
+      margin: 0 auto;
+      background-color: var(--trust-bg);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px #3375bb0d;
+      margin-bottom: 22px;
+      padding: 28px 0 18px 0;
+      border: 1.5px solid var(--trust-border);
+    }
+    .wallet-balance-label {
+      font-size: 1.13rem;
+      letter-spacing: 0.5px;
+      color: var(--trust-btn-green);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .wallet-balance-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--trust-text);
+      margin-bottom: 13px;
+      letter-spacing: 2px;
+    }
+    .wallet-balance-img {
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      margin: 15px auto 0 auto;
+      display: block;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px #3375bb11;
+      background: var(--trust-bg);
+      border: 1.5px solid var(--trust-border);
+    }
+    .wallet-buttons {
+      margin: 18px auto 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      width: 98%;
+    }
+    .wallet-btn {
+      flex: 1 1 32%;
+      padding: 12px 0;
+      font-size: 1.09em;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 700;
+      background: var(--trust-light-blue);
+      color: #0a1627;
+      transition: background 0.18s, color 0.16s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px #4f8cfb22;
+      outline: none;
+      min-width: 110px;
+    }
+    .wallet-btn:hover {
+      background: var(--trust-btn-hover);
+    }
+    .wallet-btn:active {
+      background: var(--trust-btn-active);
+      color: #fff;
+    }
+    .wallet-btn.withdraw, .wallet-btn.send {
+      background: var(--trust-card);
+      color: var(--trust-btn-green);
+      border: 2px solid var(--trust-btn-green);
+      box-shadow: 0 2px 8px #38c97611;
+    }
+    .wallet-btn.withdraw:hover, .wallet-btn.send:hover {
+      background: #092e19;
+      color: var(--trust-btn-green);
+    }
+    .wallet-btn.withdraw:active, .wallet-btn.send:active {
+      background: #2a5851;
+      color: #fff;
+    }
+    .wallet-btn.receive {
+      background: var(--trust-btn-green);
+      color: #12244b;
+    }
+    .wallet-btn.buy, .wallet-btn.swap {
+      background: var(--trust-card);
+      color: var(--trust-light-blue);
+      border: 2px solid var(--trust-light-blue);
+    }
+    .wallet-btn.buy:hover, .wallet-btn.swap:hover {
+      background: #1e3254;
+      color: var(--trust-light-blue);
+    }
+    .wallet-btn.buy:active, .wallet-btn.swap:active {
+      background: #254984;
+      color: #fff;
+    }
+    .mid-gif-wrap {
+      text-align: center;
+      margin: 28px auto 0 auto;
+      width: 92%;
+    }
+    .mid-gif {
+      width: 100%;
+      max-width: 240px;
+      height: auto;
+      border-radius: 12px;
+      background: var(--trust-bg);
+      box-shadow: 0 2px 10px #3375bb15;
+      border: 1.5px solid var(--trust-border);
+    }
+    .token-table-wrap {
+      width: 94%;
+      margin: 26px auto 0 auto;
+      background: var(--trust-card);
+      border-radius: 14px;
+      box-shadow: 0 2px 8px #3375bb09;
+      padding: 0;
+      overflow: hidden;
+      border: 1.5px solid var(--trust-border);
+    }
+    table.token-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1.03em;
+      background: transparent;
+      margin: 0;
+    }
+    .token-table th, .token-table td {
+      padding: 13px 8px;
+      font-size: 1em;
+    }
+    .token-table th {
+      color: var(--trust-light-blue);
+      background: #19345a;
+      font-weight: 700;
+      border-bottom: 1.5px solid var(--trust-border);
+      text-align: left;
+    }
+    .token-table td {
+      color: var(--trust-gray);
+      background: none;
+      font-weight: 500;
+    }
+    .token-table tr:not(:last-child) td {
+      border-bottom: 1px solid #214487;
+    }
+    .token-table td:first-child, .token-table th:first-child {
+      text-align: left;
+    }
+    .token-table td:nth-child(2), .token-table th:nth-child(2) {
+      text-align: center;
+    }
+    .token-table td:last-child, .token-table th:last-child {
+      text-align: right;
+    }
+    /* Large bottom image */
+    .footer-img-wrap {
+      margin: 38px auto 0 auto;
+      width: 97%;
+      text-align: center;
+      padding-bottom: 12px;
+    }
+    .footer-img {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #4f8cfb12;
+      border: 1.5px solid var(--trust-border);
+    }
+    .security-tip {
+      margin: 28px 0 0 0;
+      background: #19345a;
+      padding: 16px 18px;
+      border-radius: 10px;
+      color: var(--trust-btn-green);
+      font-size: 1em;
+      font-weight: 600;
+      text-align: center;
+      width: 86%;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 2px 8px #3375bb11;
+      border: 1.5px solid var(--trust-border);
+    }
+    .modal-bg {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(79, 140, 251, 0.14);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-card {
+      background: var(--trust-card);
+      border-radius: 18px;
+      padding: 32px 24px 28px 24px;
+      box-shadow: 0 8px 32px #1e3254bb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 320px;
+      max-width: 92vw;
+      border: 1.5px solid var(--trust-border);
+      position: relative;
+    }
+    .modal-card img {
+      width: 82px;
+      height: 82px;
+      object-fit: contain;
+      margin-bottom: 18px;
+      border-radius: 12px;
+      background: var(--trust-bg);
+      box-shadow: 0 2px 8px #3375bb10;
+    }
+    .modal-title {
+      font-size: 1.27rem;
+      font-weight: bold;
+      color: var(--trust-light-blue);
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .modal-desc {
+      font-size: 1.1rem;
+      color: var(--trust-text);
+      margin-bottom: 12px;
+      text-align: center;
+      font-weight: 500;
+    }
+    .modal-small {
+      font-size: 0.99rem;
+      color: var(--trust-gray);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .modal-btns {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+      justify-content: center;
+      width: 100%;
+    }
+    .modal-btn {
+      padding: 10px 28px;
+      font-size: 1.07em;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 700;
+      background: var(--trust-btn-green);
+      color: var(--trust-card);
+      transition: background 0.17s, color 0.17s;
+      box-shadow: 0 2px 6px #38c97612;
+      outline: none;
+    }
+    .modal-btn.secondary {
+      background: var(--trust-card);
+      color: var(--trust-btn-green);
+      border: 2px solid var(--trust-btn-green);
+    }
+    .modal-btn:hover {
+      background: var(--trust-btn-hover);
+      color: #12244b;
+    }
+    .modal-btn:active {
+      background: var(--trust-btn-active);
+      color: #fff;
+    }
+    .modal-btn.secondary:hover {
+      background: #092e19;
+      color: var(--trust-btn-green);
+    }
+    .modal-btn.secondary:active {
+      background: #2a5851;
+      color: #fff;
+    }
+    @media (max-width: 700px) {
+      .wallet-container {
+        width: 97vw;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wallet-container">
+
+    <!-- Header with Trust Wallet logo and Wallet text -->
+    <div class="wallet-header">
+      <img src="trustwallet-logo.png" alt="Trust Wallet Logo" class="trust-logo" />
+      <div class="wallet-title">Trust Wallet</div>
+      <div class="wallet-subtitle">Your secure crypto portfolio</div>
+    </div>
+
+    <!-- Portfolio Balance Section -->
+    <div class="wallet-balance-wrap">
+      <div class="wallet-balance-label">Portfolio Balance</div>
+      <div class="wallet-balance-amount" id="portfolio-balance-amount">$40,000.00</div>
+      <img src="portfolio-banner.jpg" alt="Portfolio" class="wallet-balance-img" />
+      <div class="wallet-buttons">
+        <button class="wallet-btn receive">Receive</button>
+        <button class="wallet-btn buy">Buy</button>
+        <button class="wallet-btn" id="deposit-btn">Deposit</button>
+        <button class="wallet-btn withdraw" id="withdraw-btn">Withdraw</button>
+        <button class="wallet-btn send">Send</button>
+        <button class="wallet-btn swap">Swap</button>
+        <button class="wallet-btn">Browser</button>
+        <button class="wallet-btn">Settings</button>
+      </div>
+    </div>
+
+    <!-- Animated GIF below balance, matching size -->
+    <div class="mid-gif-wrap">
+      <img 
+        src="wallet-overview.jpg" 
+        alt="Wallet Overview" 
+        class="mid-gif"
+      />
+    </div>
+    
+    <!-- Token Table, aligned left, center, right -->
+    <div class="token-table-wrap">
+      <table class="token-table">
+        <thead>
+          <tr>
+            <th>TOKEN</th>
+            <th>PRICE</th>
+            <th>HOLDINGS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BTC</td>
+            <td>$68,500.00</td>
+            <td>(0.324 BTC)</td>
+          </tr>
+          <tr>
+            <td>ETH</td>
+            <td>$3,700.00</td>
+            <td>(2.5 ETH)</td>
+          </tr>
+          <tr>
+            <td>USDT</td>
+            <td>$1.00</td>
+            <td>(12,500 USDT)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+   <!-- Footer image -->
+    <div class="footer-img-wrap">
+      <img src="footer1.jpg" alt="Portfolio Footer" class="footer-img" />
+    </div>
+    
+    <!-- Security Tip -->
+    <div class="security-tip">
+      <strong>Security Tip:</strong> Never share your seed phrase or private keys. Trust Wallet will never ask for these.
+    </div>
+
+    <!-- More Footer images -->
+    <div class="footer-img-wrap">
+      <img src="footer2.jpg" alt="Portfolio Footer" class="footer-img" />
+      <img src="footer3.jpg" alt="Portfolio Footer" class="footer-img" />
+    </div>
+  </div>
+
+  <!-- Deposit Modal -->
+  <div class="modal-bg" id="deposit-modal">
+    <div class="modal-card">
+      <img src="deposit-icon.jpg" alt="Deposit Wallet">
+      <div class="modal-title">Deposit</div>
+      <div class="modal-desc">Send crypto assets to your Trust Wallet address below.</div>
+      <div class="modal-small"><b>BTC</b> <br>Wallet: <span style="font-family:monospace;color:var(--trust-btn-green);">bc1qxyllg8j6wkpaur6xc9l4hh5jpg2hv8khsds0fz</span></div>
+      <div class="modal-btns">
+        <button class="modal-btn secondary" id="deposit-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Withdraw Modal -->
+  <div class="modal-bg" id="withdraw-modal">
+    <div class="modal-card">
+      <img src="withdraw-icon.jpg" alt="Withdraw Wallet">
+      <div class="modal-title">Withdraw</div>
+      <div class="modal-desc">Withdraw your crypto assets securely. Enter your destination address in the app.</div>
+      <div class="modal-small">Minimum withdrawal: <b>10 USDT</b>.<br>Withdrawals processed within 10 minutes.</div>
+      <div class="modal-btns">
+        <button class="modal-btn secondary" id="withdraw-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Modal logic for Deposit and Withdraw
+    const depositBtn = document.getElementById('deposit-btn');
+    const withdrawBtn = document.getElementById('withdraw-btn');
+    const depositModal = document.getElementById('deposit-modal');
+    const withdrawModal = document.getElementById('withdraw-modal');
+    const depositClose = document.getElementById('deposit-close');
+    const withdrawClose = document.getElementById('withdraw-close');
+
+    depositBtn.onclick = function() {
+      depositModal.style.display = 'flex';
+    };
+    withdrawBtn.onclick = function() {
+      withdrawModal.style.display = 'flex';
+    };
+    depositClose.onclick = function() {
+      depositModal.style.display = 'none';
+    };
+    withdrawClose.onclick = function() {
+      withdrawModal.style.display = 'none';
+    };
+    // Allow clicking outside modal to close
+    window.onclick = function(e) {
+      if (e.target === depositModal) {
+        depositModal.style.display = 'none';
+      }
+      if (e.target === withdrawModal) {
+        withdrawModal.style.display = 'none';
+      }
+    };
+  </script>
+</body>
+</html>
