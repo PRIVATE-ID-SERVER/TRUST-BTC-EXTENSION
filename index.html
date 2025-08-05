@@ -1,121 +1,724 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Certificate of GCash Payment</title>
+  <meta charset="UTF-8">
+  <title>USDT Wallet Professional UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Fonts and Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <style>
+    :root {
+      --primary: #21d4fd;
+      --secondary: #b721ff;
+      --success: #00c896;
+      --danger: #fe5a5a;
+      --gray-bg: #f7f7fa;
+      --input-bg: #f3f4f6;
+      --border-radius: 18px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --modal-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      --transition: 0.2s cubic-bezier(.4,2.3,.3,1);
+    }
     body {
-      background-color: #f4f6f8;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Inter', Arial, sans-serif;
+      background: var(--gray-bg);
       margin: 0;
-      padding: 40px;
+      color: #222;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 460px;
+      margin: 0 auto;
+      padding-bottom: 70px;
+    }
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 16px 0 16px;
+      background: #fff;
+      border-bottom: 1px solid #ececec;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .header .left, .header .right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 21px;
+      color: #fff;
+      font-weight: 700;
+    }
+    .wallet-address {
+      background: var(--input-bg);
+      border-radius: 14px;
+      padding: 7px 13px;
+      font-weight: 500;
+      color: #555;
+      font-size: 15px;
+      letter-spacing: 1px;
+      margin-left: 10px;
+    }
+    .logo-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 7px;
+      object-fit: contain;
+      margin-right: 7px;
+      vertical-align: middle;
+    }
+    /* Balance */
+    .balance-box {
+      text-align: center;
+      margin-top: 23px;
+      margin-bottom: 18px;
+    }
+    .balance {
+      font-size: 33px;
+      font-weight: 700;
+      color: #222;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .est-balance {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 9px;
+    }
+    /* Action Buttons */
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .btn {
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 13px 36px;
+      font-size: 19px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--input-bg);
+      color: #222;
+      box-shadow: var(--shadow);
+      transition: background var(--transition), color var(--transition);
+      outline: none;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(33,212,253,0.08);
+    }
+    .btn:hover, .btn:focus {
+      background: #e0e8f3;
+      color: #111;
+    }
+    .btn-primary:hover, .btn-primary:focus {
+      background: linear-gradient(90deg, var(--secondary) 0%, var(--primary) 100%);
+      color: #fff;
+    }
+    /* Tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 16px;
+    }
+    .tab {
+      font-size: 18px;
+      padding: 7px 0;
+      cursor: pointer;
+      color: #bbb;
+      border-bottom: 2.5px solid transparent;
+      transition: color var(--transition), border-bottom var(--transition);
+    }
+    .tab.active {
+      color: var(--primary);
+      border-bottom: 2.5px solid var(--primary);
+      font-weight: 700;
+    }
+    /* Networks */
+    .networks {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #555;
+      font-size: 16px;
+      margin-left: 20px;
+      margin-bottom: 13px;
+    }
+    .bi-chevron-down {font-size: 15px;}
+    /* Coin List */
+    .coin-list {
+      display: flex;
+      align-items: center;
+      gap: 17px;
+      padding: 18px 22px;
+      background: #fff;
+      border-radius: var(--border-radius);
+      margin: 0 16px 28px 16px;
+      box-shadow: var(--shadow);
+      transition: box-shadow var(--transition);
+    }
+    .coin-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #e3e3e3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .coin-icon img {
+      width: 36px;
+      height: 36px;
+    }
+    .coin-details {
+      flex: 1;
+    }
+    .coin-name {
+      font-size: 19px;
+      font-weight: 600;
+      color: #222;
+    }
+    .coin-sub {
+      font-size: 15px;
+      color: #888;
+      margin-bottom: 2px;
+    }
+    .coin-rate {
+      font-size: 15px;
+      color: var(--success);
+      font-weight: 500;
+    }
+    /* Bottom Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      background: #fff;
+      border-top: 1px solid #ececec;
+      display: flex;
+      justify-content: space-around;
+      padding: 14px 0;
+      z-index: 11;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .nav-icon {
+      font-size: 28px;
+      color: var(--primary);
+      opacity: 0.8;
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+    .nav-icon.selected {
+      color: var(--secondary);
+      opacity: 1;
+    }
+    /* Modal Styles */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.18);
+      justify-content: center;
+      align-items: center;
+      z-index: 99;
+      animation: fadeIn 0.3s;
+    }
+    @keyframes fadeIn {0%{opacity:0;}100%{opacity:1;}}
+    .modal {
+      background: #fff;
+      border-radius: var(--border-radius);
+      padding: 32px 26px 24px 26px;
+      min-width: 320px;
+      max-width: 98vw;
+      box-shadow: var(--modal-shadow);
+      position: relative;
+      animation: modalShow 0.25s cubic-bezier(.4,2.3,.3,1);
+    }
+    @keyframes modalShow {0%{transform:scale(0.92);}100%{transform:scale(1);}}
+    .modal h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 18px 0;
+      color: var(--secondary);
+      text-align: center;
+    }
+    .modal label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 5px;
+      display: block;
+    }
+    .modal input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 17px;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      background: var(--input-bg);
+      margin-bottom: 18px;
+      transition: border var(--transition);
+      outline: none;
+    }
+    .modal input:focus {
+      border: 1.5px solid var(--primary);
+    }
+    .modal-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .modal .btn {
+      width: 100%;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+    .modal .btn-primary {margin-top: 16px;}
+    .modal-preview {
+      background: var(--input-bg);
+      border-radius: 12px;
+      padding: 17px;
+      font-size: 17px;
+      margin-bottom: 14px;
       color: #333;
     }
-
-    .certificate-container {
-      max-width: 750px;
-      margin: auto;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      padding: 30px;
+    .modal-close {
+      position: absolute;
+      right: 18px;
+      top: 14px;
+      background: none;
+      border: none;
+      font-size: 25px;
+      color: #888;
+      cursor: pointer;
+      transition: color var(--transition);
     }
-
-    .certificate-header {
-      text-align: center;
-      margin-bottom: 30px;
+    .modal-close:hover {color: var(--danger);}
+    /* Withdraw Success Modal */
+    .withdraw-success-modal {
+      background: linear-gradient(135deg, #181a20 0%, #23244d 100%) !important;
+      color: #fff !important;
+      border-radius: 22px !important;
+      min-width: 340px;
+      max-width: 98vw;
+      box-shadow: var(--modal-shadow);
     }
-
-    .certificate-header h1 {
-      font-size: 26px;
-      color: #2c3e50;
-      margin: 0;
+    .withdraw-success-modal .btn {
+      background: #444 !important;
+      color: #fff !important;
+      border-radius: 8px;
+      font-size: 17px;
+      padding: 13px 0;
+      font-weight: 600;
+      box-shadow: none;
+      border: none;
+      margin-top: 0;
     }
-
-    .certificate-body {
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    .highlight {
-      color: #27ae60;
-      font-weight: bold;
-    }
-
-    .certificate-footer {
-      margin-top: 30px;
-      text-align: center;
-      font-size: 14px;
-      color: #777;
-    }
-
-    .disclaimer {
-      font-size: 13px;
-      color: #a00;
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .signature-block {
-      margin-top: 40px;
-      text-align: left;
-    }
-
-    .signature-block p {
-      margin: 4px 0;
-    }
-
-    .verified-badge {
-      display: inline-block;
-      background-color: #27ae60;
+    .withdraw-success-modal .btn:active {background: #222 !important;}
+    /* USDT Payment Box */
+    .usdt-payment-box {
+      background: #23244d;
       color: #fff;
-      padding: 6px 12px;
-      border-radius: 5px;
-      font-weight: bold;
-      margin-top: 10px;
+      border-radius: 12px;
+      padding: 18px;
+      margin-top: 22px;
+      margin-bottom: 10px;
+      text-align: center;
+      font-size: 17px;
+      box-shadow: 0 2px 16px rgba(33,212,253,0.07);
+      animation: fadeIn 0.3s;
+    }
+    .usdt-address-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .usdt-address {
+      padding: 9px 16px;
+      background: #181a20;
+      color: #fff;
+      border-radius: 7px;
+      font-size: 17px;
+      border: 1px solid #444;
+      letter-spacing: 1px;
+      font-family: 'Courier New', Courier, monospace;
+      user-select: all;
+    }
+    .copy-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 7px 12px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background var(--transition);
+      border: 1px solid #fff2;
+    }
+    .copy-btn:active, .copy-btn.copied {background: var(--success);}
+    .loading-spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid var(--primary);
+      border-radius: 50%;
+      border-top: 3px solid #fff;
+      animation: spin 0.8s linear infinite;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    @keyframes spin {0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+    .coinbase-link {
+      display: inline-block;
+      background: var(--secondary);
+      color: #fff;
+      padding: 9px 19px;
+      border-radius: 8px;
+      font-size: 17px;
+      font-weight: 700;
+      margin-top: 13px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background var(--transition);
+      outline: none;
+    }
+    .coinbase-link:hover, .coinbase-link:focus {
+      background: var(--primary);
+      color: #fff;
+    }
+    /* Responsive */
+    @media (max-width:600px) {
+      .container {padding-bottom: 90px;}
+      .header, .coin-list {margin: 0 3px;}
     }
   </style>
 </head>
 <body>
-  <div class="certificate-container">
-    <div class="certificate-header">
-      <h1>CERTIFICATE OF GCASH PAYMENT</h1>
-      <div class="verified-badge">✔ Verified Transaction</div>
-    </div>
-
-    <div class="certificate-body">
-      <p>This certificate confirms that a payment of <span class="highlight">₱250,000.00</span> has been successfully deposited to the designated TRX address following the required deposit of <span class="highlight">$28 TRX</span>.</p>
-
-      <p>The payment was officially submitted to the receiver via Blockchain and GCash, and the transaction has been verified and recorded.</p>
-
-      <h3>Recipient Details:</h3>
-      <p><strong>Name:</strong> Ramon Hermogenes Jose Tantoco Tupaz Jr</p>
-      <p><strong>GCash Number:</strong> 09959880442</p>
-
-      <h3>Sender Details:</h3>
-      <p><strong>Name:</strong> Juan Dela Cruz</p>
-      <p><strong>Metrobank Account Number:</strong> 1234567890</p>
-
-      <p><strong>Transaction Number:</strong> [Insert Transaction Number]</p>
-      <p><strong>Date:</strong> [Insert Date]</p>
-
-      <div class="disclaimer">
-        ⚠️ GCash and Metrobank are not responsible for any loss resulting from this transaction. Please ensure all details are verified before proceeding.
+  <div class="container">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="left">
+        <img class="logo-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Algeria_logo.png/320px-Algeria_logo.png" alt="Algeria Logo" title="Algeria Logo">
+        <i class="bi bi-gear" style="font-size:22px; color:var(--primary);"></i>
+        <i class="bi bi-files" style="font-size:22px;"></i>
+        <i class="bi bi-search" style="font-size:22px;"></i>
       </div>
-
-      <div class="signature-block">
-        <p>__________________________</p>
-        <p><strong>[Authorized Signature]</strong></p>
-        <p><strong>[Title]</strong></p>
-        <p><strong>Date:</strong> [Insert Date]</p>
+      <div class="right">
+        <div class="wallet-address">0xB1...5a1</div>
+        <div class="avatar">
+          <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" style="width:28px; height:28px;" title="USDT Icon" />
+        </div>
       </div>
     </div>
 
-    <div class="certificate-footer">
-      &copy; 2025 GCash & Metrobank | Blockchain Verified | All Rights Reserved
+    <!-- BALANCE and ESTIMATED -->
+    <div class="balance-box">
+      <div class="balance">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/77/Flag_of_Algeria.svg" alt="DZD" style="width:28px; height:28px; border-radius:5px; vertical-align:middle;" title="Algerian Dinar">
+        DZD <span id="main-balance">2,380,000.00</span>
+      </div>
+      <div class="est-balance">
+        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" style="width:21px; height:21px; vertical-align:middle;" title="USDT">
+        Estimated: <span id="est-balance">17,930.18</span> USDT
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="actions">
+      <button class="btn" id="btn-userid"><i class="bi bi-person-badge"></i> USER ID</button>
+      <button class="btn btn-primary" id="btn-withdraw"><i class="bi bi-cash-coin"></i> Withdraw</button>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <div class="tab">DeFi</div>
+      <div class="tab">NFTs</div>
+      <div class="tab active">Crypto</div>
+    </div>
+
+    <!-- NETWORKS -->
+    <div class="networks">
+      <span>Networks (1)</span>
+      <i class="bi bi-chevron-down"></i>
+    </div>
+
+    <!-- COIN LIST -->
+    <div class="coin-list">
+      <div class="coin-icon">
+        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" />
+      </div>
+      <div class="coin-details">
+        <div class="coin-name">USDT</div>
+        <div class="coin-sub"><span id="main-coin">62.904</span> USDT</div>
+      </div>
+      <div>
+        <div style="text-align: right;">
+          <div style="font-size:17px; font-weight:600;">USDT <span id="main-coin-value">17.93K</span></div>
+          <div class="coin-rate"><i class="bi bi-arrow-up-right"></i> 2.47%</div>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <div class="bottom-nav">
+    <span class="nav-icon selected"><img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" style="width:23px; vertical-align:middle;" /></span>
+    <span class="nav-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2d/Algeria_logo.png" alt="Algeria" style="width:22px; vertical-align:middle;" /></span>
+    <span class="nav-icon"><i class="bi bi-arrow-up-circle"></i></span>
+    <span class="nav-icon"><img src="https://upload.wikimedia.org/wikipedia/commons/4/48/Bitcoin.svg" alt="BTC" style="width:22px; vertical-align:middle;" /></span>
+    <span class="nav-icon"><i class="bi bi-house-door"></i></span>
+  </div>
+
+  <!-- WITHDRAW MODAL -->
+  <div class="modal-bg" id="withdraw-modal-bg">
+    <div class="modal" id="withdraw-modal">
+      <button class="modal-close" onclick="closeWithdrawModal()">&times;</button>
+      <h2>
+        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" style="width:24px; vertical-align:middle; margin-right:7px;" /> Withdraw USDT
+      </h2>
+      <label>Amount</label>
+      <div class="modal-row">
+        <input type="text" id="withdraw-amount" value="Max" readonly />
+        <span style="font-size:15px; color:#666;">USDT</span>
+        <span style="font-size:15px; color:#666;">|</span>
+        <span style="font-size:15px; color:#666;">DZD</span>
+      </div>
+      <label>Withdrawal Address</label>
+      <input type="text" id="withdraw-address" placeholder="Enter your USDT address" />
+      <button class="btn btn-primary" onclick="showWithdrawPreview()"><i class="bi bi-check2-circle"></i> Submit</button>
+    </div>
+  </div>
+
+  <!-- WITHDRAW PREVIEW MODAL -->
+  <div class="modal-bg" id="withdraw-preview-modal-bg">
+    <div class="modal" id="withdraw-preview-modal">
+      <button class="modal-close" onclick="closeWithdrawPreviewModal()">&times;</button>
+      <h2>
+        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" style="width:24px; vertical-align:middle; margin-right:7px;" /> Withdraw Preview
+      </h2>
+      <div class="modal-preview" id="withdraw-preview-content">
+      </div>
+      <button class="btn btn-primary" onclick="showWithdrawSuccess()"><i class="bi bi-arrow-right-circle"></i> Confirm</button>
+    </div>
+  </div>
+
+  <!-- SUCCESS MODAL (modern, friendly, interactive) -->
+  <div class="modal-bg" id="withdraw-success-modal-bg">
+    <div class="modal withdraw-success-modal" id="withdraw-success-modal">
+      <button class="modal-close" onclick="closeWithdrawSuccessModal()">&times;</button>
+      <div style="text-align:center; margin-bottom:18px;">
+        <span style="font-size:24px; font-weight:700; color:#fff;">
+          <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" alt="USDT" style="width:27px; vertical-align:middle; margin-right:7px;" />
+          Withdrawal Details
+        </span>
+      </div>
+      <div style="text-align:center; margin-bottom:7px;">
+        <span id="withdraw-success-amount" style="font-size:32px; font-weight:700; color:var(--success);">-<span id="success-amount-val">17930.18</span> USDT</span>
+      </div>
+      <div style="text-align:center; margin-bottom:12px;">
+        <span style="color:var(--success); font-size:20px; font-weight:600;"><i class="bi bi-patch-check-fill"></i> Completed</span>
+      </div>
+      <div style="text-align:center; color:#b5b5de; font-size:15px; margin-bottom:8px;">
+        Crypto transferred out of Blockchain. Please contact the recipient platform for your transaction receipt.
+      </div>
+      <div style="text-align:center; color:#ffe082; font-size:15px; margin-bottom:12px;">
+        Why hasn't my withdrawal arrived?
+      </div>
+      <div style="border-top:1px solid #444; margin-bottom:14px;"></div>
+      <div style="color:#ccc; font-size:16px; margin-bottom:18px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span>Network</span>
+          <span>USDT</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span>Address</span>
+          <span id="success-address-val">[address]</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span>Txid</span>
+          <span><a href="#" style="color:var(--primary);">1b9143b2d...</a></span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span>Withdrawal Amount</span>
+          <span id="success-amount2-val">17930.18 USDT</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span>Withdraw Activation</span>
+          <span>
+            <button id="activate-btn" class="btn btn-primary" style="padding:6px 26px; font-size:16px;">$21 USDT</button>
+          </span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span>Withdrawal Wallet</span>
+          <span>
+            <a href="#" id="coinbase-link" class="coinbase-link">
+              <img src="https://cryptologos.cc/logos/coinbase-coinbase-logo.png" alt="Coinbase" style="width:18px; vertical-align:middle; margin-right:5px;" />
+              coinbase.com
+            </a>
+          </span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+          <span>Date</span>
+          <span id="success-date-val">2025-08-05 05:02:50</span>
+        </div>
+      </div>
+      <div id="usdt-payment-info"></div>
+      <div style="border-top:1px solid #444; margin-top:12px; margin-bottom:8px;"></div>
+      <div style="color:#e1e1e1; text-align:center; font-size:15px; margin-bottom:10px;">
+        <strong>Notice:</strong> The amount of USDT withdrawal has been successful.<br>
+        After the $21 USDT deposit, it will be available on your address.
+      </div>
+      <div style="display:flex; justify-content:space-evenly; margin-top:8px;">
+        <button class="btn" style="background:#fe5a5a; color:#fff; flex:1; margin-right:10px;"><i class="bi bi-shield-exclamation"></i> Scam Report</button>
+        <button class="btn" style="background:#444; color:#fff; flex:1;"><i class="bi bi-bookmark-check"></i> Save Address</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // USER ID button opens WhatsApp chat
+    document.getElementById('btn-userid').onclick = function() {
+      window.open('https://wa.me/966580402997', '_blank');
+    };
+
+    // Withdraw button opens modal
+    document.getElementById('btn-withdraw').onclick = function() {
+      document.getElementById('withdraw-modal-bg').style.display = 'flex';
+      document.getElementById('withdraw-address').value = '';
+    };
+
+    function closeWithdrawModal() {
+      document.getElementById('withdraw-modal-bg').style.display = 'none';
+    }
+
+    function showWithdrawPreview() {
+      const amount = document.getElementById('withdraw-amount').value;
+      const address = document.getElementById('withdraw-address').value.trim();
+      if (!address) {
+        document.getElementById('withdraw-address').focus();
+        alert('Please enter your USDT address.');
+        return;
+      }
+      const now = new Date();
+      const previewHtml = `
+        <div><strong>AMOUNT:</strong> <span style="color:var(--primary);">${amount === 'Max' ? '17930.18' : amount} USDT</span></div>
+        <div><strong>FROM:</strong> <span style="color:var(--secondary);">coinbase.com</span></div>
+        <div><strong>TO:</strong> <span style="color:var(--success);">${address}</span></div>
+        <div><strong>USER TIME:</strong> ${now.toUTCString()}</div>
+        <div><strong>WITHDRAW CHARGES:</strong> <span style="color:var(--danger);">$21 USDT</span></div>
+      `;
+      document.getElementById('withdraw-preview-content').innerHTML = previewHtml;
+      document.getElementById('withdraw-modal-bg').style.display = 'none';
+      document.getElementById('withdraw-preview-modal-bg').style.display = 'flex';
+    }
+
+    function closeWithdrawPreviewModal() {
+      document.getElementById('withdraw-preview-modal-bg').style.display = 'none';
+    }
+
+    function showWithdrawSuccess() {
+      document.getElementById('withdraw-preview-modal-bg').style.display = 'none';
+      const address = document.getElementById('withdraw-address').value.trim();
+      const amount = document.getElementById('withdraw-amount').value === "Max" ? "17930.18" : document.getElementById('withdraw-amount').value;
+      const now = new Date();
+      document.getElementById('success-amount-val').textContent = amount;
+      document.getElementById('success-amount2-val').textContent = amount + " USDT";
+      document.getElementById('success-address-val').textContent = address;
+      document.getElementById('success-date-val').textContent = now.getFullYear() + "-" +
+        String(now.getMonth()+1).padStart(2,'0') + "-" +
+        String(now.getDate()).padStart(2,'0') + " " +
+        String(now.getHours()).padStart(2,'0') + ":" +
+        String(now.getMinutes()).padStart(2,'0') + ":" +
+        String(now.getSeconds()).padStart(2,'0');
+      document.getElementById('usdt-payment-info').innerHTML = '';
+      document.getElementById('withdraw-success-modal-bg').style.display = 'flex';
+    }
+
+    function closeWithdrawSuccessModal() {
+      document.getElementById('withdraw-success-modal-bg').style.display = 'none';
+    }
+
+    // $21 USDT Activate Button Handler and Coinbase Auto Withdraw
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('withdraw-success-modal-bg').addEventListener('click', function(e) {
+        if (e.target.id === 'withdraw-success-modal-bg') closeWithdrawSuccessModal();
+      });
+      document.getElementById('activate-btn').onclick = function() {
+        showUsdtPaymentInfo();
+      };
+      document.getElementById('coinbase-link').onclick = function(e) {
+        e.preventDefault();
+        showCoinbaseAutoWithdraw();
+      };
+    });
+
+    function showUsdtPaymentInfo() {
+      var infoDiv = document.getElementById('usdt-payment-info');
+      infoDiv.innerHTML = '<div class="usdt-payment-box"><span>Generating Payment Info</span><span class="loading-spinner"></span></div>';
+      setTimeout(function() {
+        infoDiv.innerHTML = `
+          <div class="usdt-payment-box">
+            <div style="color:var(--primary); font-weight:600; font-size:19px; margin-bottom:8px;">USDT Blockchain Payment Address</div>
+            <div class="usdt-address-row">
+              <span class="usdt-address" id="blockchain-address">TEUh5LumZf8UDhGhZNbSmSKwQ6945cvx7o</span>
+              <button class="copy-btn" onclick="copyAddress(this)">Copy</button>
+            </div>
+            <div style="margin-top:12px; color:#e1e1e1; font-size:15px;">Please deposit <strong>$21 USDT</strong> to activate withdrawal.<br>After deposit, funds will be available at your address.</div>
+          </div>
+        `;
+      }, 3000);
+    }
+
+    function copyAddress(btn) {
+      var address = document.getElementById('blockchain-address').textContent;
+      navigator.clipboard.writeText(address).then(function() {
+        btn.textContent = "Copied!";
+        btn.classList.add("copied");
+        setTimeout(function(){
+          btn.textContent = "Copy";
+          btn.classList.remove("copied");
+        },1200);
+      });
+    }
+
+    function showCoinbaseAutoWithdraw() {
+      var infoDiv = document.getElementById('usdt-payment-info');
+      infoDiv.innerHTML = '<div class="usdt-payment-box"><span>Auto Withdrawing...</span><span class="loading-spinner"></span></div>';
+      setTimeout(function() {
+        infoDiv.innerHTML = `
+          <div class="usdt-payment-box">
+            <div style="color:var(--success); font-weight:700; font-size:19px; margin-bottom:10px;">COINBASE AUTO WITHDRAW TO BINANCE</div>
+            <div style="margin-top:10px; color:#e1e1e1; font-size:15px;">Your withdrawal is being sent from <strong>COINBASE</strong> to <strong>BINANCE</strong>.<br>Please allow a few moments for the transaction to complete.</div>
+          </div>
+        `;
+      }, 3000);
+    }
+  </script>
 </body>
 </html>
